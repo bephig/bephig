@@ -1,93 +1,118 @@
-Workshop \#1: introduction to R and RStudio
+Workshop \#1: Introduction to R and RStudio
 ================
 BEPHIG
-2020-11-01
+2020-11-02
 
 # Getting started
 
+First, consider setting the option “Save workspace to .RData on exit” to
+“Never”. If you become accustomed to beginning anew each time you launch
+R or RStudio, then reproducible research will become second nature to
+you. To change this setting, navigate to Global Options under Tools. The
+option can be toggled between “Always”, “Never”, and “Ask” in the
+General tab.
+
+Once you are ready to proceed, start a new R script with the shortcut
+Ctrl+Shift+N or Cmd+Shift+N, then continue onto the next section.
+
 ## Environment
 
-Your current working directory can be found by typing the function
-`getwd()` into your console. It is important to know the location of
-your working directory when importing and exporting data to and from R.
-You can set a new working directory with the function `setwd()`.  
-But before we do that, now is as good a time as any to talk about
-functions. Both `getwd()` and `setwd()` are functions. If you want to
-learn more about a function (e.g., description; usage; arguments), add a
-question mark before the function to bring up any relevant documentation
-in your Help pane.
-
-Give these a try:
+Your current working directory can be found using the function
+`getwd()`. Type this into your script, then run the current line of code
+using the shortcut Ctrl+Enter or Cmd+Enter.
 
 ``` r
-?getwd()
 getwd()
 ```
 
-Based on the information included in the documentation, we can use
-`setwd()` to change our working directory to another folder. Before we
-do that, it might be a good idea to assign (`<-`) the current working
-directory to a variable in case we need to revert back to it in the
-future.
+You should see the location of your working directory as the output.
+This location is important when importing and exporting information to
+and from R. You can set a new working directory with the function
+`setwd()`. But before you do that, now is as good a time as any to talk
+about functions. Both `getwd()` and `setwd()` are functions. If you want
+to learn more about a function (e.g., description; usage; arguments),
+add a question mark before the function to bring up any relevant
+documentation in the Help pane. Type the following as a new line of code
+in your script, then give it a try:
 
 ``` r
-original_directory <- getwd() 
-# alternatively
-assign(x = "original_directory", value = getwd())
+?getwd()
 ```
 
-Now, we can change the working directory, allowing us to keep all the
-files relevant to our analysis in a single folder named ‘tmp’.
+You should now see an updated pane with documentation about the
+`getwd()` and `setwd()` functions. Based on the information provided in
+the documentation, you should be able to use `setwd()` to change the
+working directory to another location. But before you attempt to change
+the directory, you are advised to assign (`<-`) the path to the current
+working directory to an object in the environment. This will allow you
+to revert back to the original working directory if you need to do so in
+the future. Again, type the following into a new line, then run the
+code.
+
+``` r
+original_directory <- getwd() # alternatively: assign(x = "original_directory", value = getwd())
+```
+
+> You may have noticed text following `original_directory <- getwd()`.
+> Anything follow `#` will be ignored when running that line. Use this
+> to your advantage and document your code so that others can follow
+> along.
+
+Now, you can change the working directory to a folder named ‘tmp’. This
+allows you to keep all the files relevant to your analysis in a single
+folder.
 
 ``` r
 setwd(dir = "/tmp")
 ```
 
-We can then use `getwd()` to see if the change in working directory has
+You can then use `getwd()` to see if the change in working directory has
 been successful.
 
 ``` r
 getwd()
 ```
 
-We can restore the original working directory by using the value stored
+You can restore the original working directory by using the value stored
 in the variable `original_directory`.
 
 ``` r
 setwd(original_directory)
 ```
 
-Now try `getwd()` again.
+Give `getwd()` another try.
 
 ``` r
 getwd()
 ```
 
-Notice that `getwd()` will now return the original working directory. It
-is worth pointing out that the `dir =` portion can be omitted from
-`setwd(...)` because the function only accepts one argument.  
-We can also omit certain arguments from functions if there are default
-values. For example, bring up the documentation for `rnorm()`.
+Notice that the output of `getwd()` is now the original working
+directory.
+
+It is worth pointing out that the `dir =` portion can be omitted from
+`setwd(...)` because the function only accepts one argument. It is also
+possible to omit certain arguments from functions if the arguments have
+default values. For example, bring up the documentation for `rnorm()`.
 
 ``` r
 ?rnorm()
 ```
 
 This function generates `n` random values from a normal distribution. If
-we don’t specify the mean and standard deviation (sd) of the normal
-distribution and provide a single number as an argument, then that
-number will be treated as the argument for `n` and the mean and sd will
-default to 0 and 1, respectively.
+you choose not to specify the mean and standard deviation (sd) of the
+normal distribution and provide only a single number as an argument,
+then that number will be treated as the argument for `n` and the mean
+and sd will default to values of 0 and 1, respectively.
 
 ``` r
-set.seed(1) # to ensure that we get the same values
+set.seed(1) # to ensure that the same values are generated despite the supposed randomness of rnorm()
 rnorm(10)
 ```
 
     ##  [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078 -0.8204684
     ##  [7]  0.4874291  0.7383247  0.5757814 -0.3053884
 
-But what if we were interested in generating 10 values from a normal
+But what if you were interested in generating ten values from a normal
 distribution with mean of 0 and sd of 10?
 
 ``` r
@@ -98,11 +123,11 @@ rnorm(10, 10)
     ##  [1]  9.373546 10.183643  9.164371 11.595281 10.329508  9.179532 10.487429
     ##  [8] 10.738325 10.575781  9.694612
 
-Judging from the output, we can already tell that these ten values were
-drawn from a normal distribution with a mean of 10. In this example,
-where the arguments are ambiguous, the first `10` is interpreted as the
-first argument (`n`) and the second `10` is interpreted as the second
-argument (`mean` instead of `sd`). Thus, we have to be more specific.
+Judging from the output, it is obvious that these ten values were drawn
+from a normal distribution with a mean of 10. In this example where the
+arguments are ambiguous, the first `10` is used as the first argument
+(`n`) and the second `10` is used as the second argument (`mean` instead
+of `sd`). Thus, you will have to be more specific.
 
 ``` r
 set.seed(1)
@@ -112,9 +137,724 @@ rnorm(10, sd = 10)
     ##  [1] -6.264538  1.836433 -8.356286 15.952808  3.295078 -8.204684  4.874291
     ##  [8]  7.383247  5.757814 -3.053884
 
-Bringing the focus back to the topic of working directories, I would
-recommend the use of RStudio projects. I find it helpful in
-compartmentalize my analyses. It also plays nicely with git if you are
-ever in need of version control. Detailed information about Rstudio
-projects can be found on [this
-page](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects).
+Circling back to the topic of working directories, consider using
+RStudio projects to compartmentalize analyses instead. When you click on
+a .Rproj file within your file explorer, you will have already set your
+working directory to the root folder. RStudio projects have the added
+bonus of playing nicely with git/subversion if you are ever in need of
+version control. Detailed information about RStudio projects can be
+found on
+[here](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects).
+
+While the following is unnecessary if you had decided to turn off the
+saving of the workspace to .Rdata on exit, try making it a habit to rid
+the environment of objects that serve no purpose within your scripts.
+First, you can find out what is actually in the environment using the
+function `ls()`.
+
+``` r
+ls()
+```
+
+    ## [1] "original_directory"
+
+The path to the location of the default working directory (i.e.,
+`original_directory`) is not something that you will need to export from
+R. If you were to save the script that you have been working on thus
+far, you can easily re-create this object as needed. Thus, you can
+remove it from the environment with `rm()` if you intend to start work
+on a new script.
+
+``` r
+rm(original_directory)
+```
+
+You could have also cleared everything from the environment with the
+following line of code:
+
+``` r
+rm(list = ls())
+```
+
+Ctrl+Shift+F10 or Cmd+Shift+F10 can also be used to restart the R
+session. This shortcut is especially helpful because it will also
+detach/unload any packages you may have attached/loaded previously.
+
+If you were to send this script to someone else, they should be able to
+replicate each and every step of this demonstration.
+
+When you are ready to move on, create a dedicated RStudio project and a
+new R script, then jump into the basics.
+
+## Basics
+
+You can complete simple tasks without relying on the use of functions.
+
+``` r
+1+2
+```
+
+    ## [1] 3
+
+``` r
+8-4
+```
+
+    ## [1] 4
+
+``` r
+2*6
+```
+
+    ## [1] 12
+
+``` r
+49/7
+```
+
+    ## [1] 7
+
+``` r
+5^2
+```
+
+    ## [1] 25
+
+You can also use `==`,`>`, `>=`, etc. (to bring up documentation, try
+?`==`) to evaluate if something is TRUE or FALSE.
+
+``` r
+2+2==4
+```
+
+    ## [1] TRUE
+
+``` r
+2 + 2 == 5
+```
+
+    ## [1] FALSE
+
+``` r
+21>20
+```
+
+    ## [1] TRUE
+
+``` r
+21 > 21
+```
+
+    ## [1] FALSE
+
+``` r
+21>= 21
+```
+
+    ## [1] TRUE
+
+Adding `!` in front of anything in R acts as a sort of logical negation.
+
+``` r
+2+2==4
+```
+
+    ## [1] TRUE
+
+``` r
+2 + 2 != 4
+```
+
+    ## [1] FALSE
+
+``` r
+TRUE
+```
+
+    ## [1] TRUE
+
+``` r
+!(TRUE)
+```
+
+    ## [1] FALSE
+
+Logical constants can be evaluated in tandem with a combination of `&`
+(“and”) or `|` (“or”).
+
+``` r
+?`|` # to bring up the relevant documentation
+1+1==2 & 2+2==4
+```
+
+    ## [1] TRUE
+
+``` r
+TRUE & TRUE
+```
+
+    ## [1] TRUE
+
+``` r
+TRUE & FALSE
+```
+
+    ## [1] FALSE
+
+``` r
+!FALSE & !FALSE
+```
+
+    ## [1] TRUE
+
+``` r
+T | T
+```
+
+    ## [1] TRUE
+
+``` r
+F | T
+```
+
+    ## [1] TRUE
+
+``` r
+F | F
+```
+
+    ## [1] FALSE
+
+``` r
+T | T & F
+```
+
+    ## [1] TRUE
+
+``` r
+(T | T) & F
+```
+
+    ## [1] FALSE
+
+``` r
+# note: in these contexts, 0 is FALSE and 1 is TRUE
+0 == F & 1 == T
+```
+
+    ## [1] TRUE
+
+One application where you might find this helpful is in situations where
+you want to do something different based on whether the result of the
+test.
+
+``` r
+ifelse(test = T, yes = "important", no = "not important")
+```
+
+    ## [1] "important"
+
+``` r
+ifelse(F, "important", "not important")
+```
+
+    ## [1] "not important"
+
+As an aside, if you need to make use of the exclusive OR, check out
+`xor()`:
+
+``` r
+xor(T,F)
+```
+
+    ## [1] TRUE
+
+``` r
+xor(F,T)
+```
+
+    ## [1] TRUE
+
+``` r
+xor(F,F)
+```
+
+    ## [1] FALSE
+
+``` r
+xor(T,T)
+```
+
+    ## [1] FALSE
+
+If you were interested in what is “under the hood” of `xor()`, you can
+run `xor` (notice the lack of parentheses) and inspect the output.
+
+``` r
+xor
+```
+
+    ## function (x, y) 
+    ## {
+    ##     (x | y) & !(x & y)
+    ## }
+    ## <bytecode: 0x55d36e38fdb0>
+    ## <environment: namespace:base>
+
+Now, it’s time to work with some real data.
+
+### Importing data
+
+You can import all sorts of data into R, but some file types may require
+packages not included with the base version of R. One popular package
+for data manipulation is `dplyr`. More information on this package can
+be found [here](https://dplyr.tidyverse.org/).
+
+#### Installing packages not included in base R
+
+You can install `dplyr` (or any other package in CRAN) with the
+following line of code: `install.packages("dplyr", dependencies = T)`.
+The argument, `dependencies = T`, is recommended as this will install
+any ancillary packages
+
+You are encouraged to enter and run this line of code in your console
+because you will only need to install this package once. It is also
+common courtesy not to force the installation of a package onto an
+unsuspecting person running your code. They will know soon enough if
+they are missing a package because they will eventually run into errors.
+
+Once installed, use the following line to attach the package.
+
+``` r
+library("dplyr")
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+Please also install a sister-package: `readr` (i.e.,
+`install.packages("readr", dependencies = T)`), then attach the package
+as before.
+
+``` r
+library("readr")
+```
+
+Why should you go through the trouble of installing additional packages?
+If you intend to use R for data analysis, then this will likely be the
+first of many packages that you’ll have to install to take advantage of
+R as a statistical language.
+
+`dplyr` and `readr` are just two of the many packages included in the
+`tidyverse` suite. You are encouraged to install `tidyverse` (in the
+same manner described for `dplyr` and `readr`; i.e., as if it were its
+own package) on your own time. While these packages are not strictly
+necessary for data manipulation, there are many useful functions
+designed to make your life much simpler. Over time, you may discover
+other packages that work better for you.
+
+#### Importing data (continued…)
+
+Without further ado, download the following csv file containing data
+about measles vaccination rates from [rfordatascience’s tidytuesday
+GitHub project](https://github.com/rfordatascience/tidytuesday). The
+original source of these data is [The Wall Street
+Journal](https://github.com/WSJ/measles-data).
+
+``` r
+measles <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv')
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   index = col_double(),
+    ##   state = col_character(),
+    ##   year = col_character(),
+    ##   name = col_character(),
+    ##   type = col_character(),
+    ##   city = col_character(),
+    ##   county = col_character(),
+    ##   district = col_logical(),
+    ##   enroll = col_double(),
+    ##   mmr = col_double(),
+    ##   overall = col_double(),
+    ##   xrel = col_logical(),
+    ##   xmed = col_double(),
+    ##   xper = col_double(),
+    ##   lat = col_double(),
+    ##   lng = col_double()
+    ## )
+
+Notice the assignment of the downloaded data to an object termed
+`measles`. This is important because you will be working with the data.
+
+What exactly are you looking at?
+
+``` r
+str(measles)
+```
+
+    ## tibble [66,113 × 16] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+    ##  $ index   : num [1:66113] 1 2 3 4 5 6 7 8 9 10 ...
+    ##  $ state   : chr [1:66113] "Arizona" "Arizona" "Arizona" "Arizona" ...
+    ##  $ year    : chr [1:66113] "2018-19" "2018-19" "2018-19" "2018-19" ...
+    ##  $ name    : chr [1:66113] "A J Mitchell Elementary" "Academy Del Sol" "Academy Del Sol - Hope" "Academy Of Mathematics And Science South" ...
+    ##  $ type    : chr [1:66113] "Public" "Charter" "Charter" "Charter" ...
+    ##  $ city    : chr [1:66113] "Nogales" "Tucson" "Tucson" "Phoenix" ...
+    ##  $ county  : chr [1:66113] "Santa Cruz" "Pima" "Pima" "Maricopa" ...
+    ##  $ district: logi [1:66113] NA NA NA NA NA NA ...
+    ##  $ enroll  : num [1:66113] 51 22 85 60 43 36 24 22 26 78 ...
+    ##  $ mmr     : num [1:66113] 100 100 100 100 100 100 100 100 100 100 ...
+    ##  $ overall : num [1:66113] -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 ...
+    ##  $ xrel    : logi [1:66113] NA NA NA NA NA NA ...
+    ##  $ xmed    : num [1:66113] NA NA NA NA 2.33 NA NA NA NA NA ...
+    ##  $ xper    : num [1:66113] NA NA NA NA 2.33 NA 4.17 NA NA NA ...
+    ##  $ lat     : num [1:66113] 31.3 32.2 32.1 33.5 33.5 ...
+    ##  $ lng     : num [1:66113] -111 -111 -111 -112 -112 ...
+    ##  - attr(*, "spec")=
+    ##   .. cols(
+    ##   ..   index = col_double(),
+    ##   ..   state = col_character(),
+    ##   ..   year = col_character(),
+    ##   ..   name = col_character(),
+    ##   ..   type = col_character(),
+    ##   ..   city = col_character(),
+    ##   ..   county = col_character(),
+    ##   ..   district = col_logical(),
+    ##   ..   enroll = col_double(),
+    ##   ..   mmr = col_double(),
+    ##   ..   overall = col_double(),
+    ##   ..   xrel = col_logical(),
+    ##   ..   xmed = col_double(),
+    ##   ..   xper = col_double(),
+    ##   ..   lat = col_double(),
+    ##   ..   lng = col_double()
+    ##   .. )
+
+Based on this output, you can state that you are looking at a tibble
+with 16 columns and 66,113 rows. You can also say that you’re looking at
+a tibble, but what is a tibble? A tibble is just a fancier data frame
+(see [here](https://r4ds.had.co.nz/tibbles.html#tibbles-vs.-data.frame)
+for a more detailed discussion).
+
+You can summarize the data by using the `summary()` function:
+
+``` r
+summary(measles)
+```
+
+    ##      index         state               year               name          
+    ##  Min.   :   1   Length:66113       Length:66113       Length:66113      
+    ##  1st Qu.: 429   Class :character   Class :character   Class :character  
+    ##  Median : 997   Mode  :character   Mode  :character   Mode  :character  
+    ##  Mean   :1608                                                           
+    ##  3rd Qu.:2133                                                           
+    ##  Max.   :8066                                                           
+    ##                                                                         
+    ##      type               city              county          district      
+    ##  Length:66113       Length:66113       Length:66113       Mode:logical  
+    ##  Class :character   Class :character   Class :character   NA's:66113    
+    ##  Mode  :character   Mode  :character   Mode  :character                 
+    ##                                                                         
+    ##                                                                         
+    ##                                                                         
+    ##                                                                         
+    ##      enroll            mmr            overall         xrel        
+    ##  Min.   :   0.0   Min.   : -1.00   Min.   : -1.00   Mode:logical  
+    ##  1st Qu.:  46.0   1st Qu.: -1.00   1st Qu.: -1.00   TRUE:109      
+    ##  Median :  80.0   Median : 95.00   Median : 87.00   NA's:66004    
+    ##  Mean   : 131.9   Mean   : 63.17   Mean   : 54.09                 
+    ##  3rd Qu.: 129.0   3rd Qu.: 98.00   3rd Qu.: 96.10                 
+    ##  Max.   :6222.0   Max.   :100.00   Max.   :100.00                 
+    ##  NA's   :16260                                                    
+    ##       xmed             xper             lat             lng         
+    ##  Min.   :  0.04   Min.   :  0.17   Min.   :24.55   Min.   :-124.50  
+    ##  1st Qu.:  1.00   1st Qu.:  2.84   1st Qu.:35.69   1st Qu.:-117.63  
+    ##  Median :  2.00   Median :  5.00   Median :40.21   Median : -89.97  
+    ##  Mean   :  2.91   Mean   :  6.78   Mean   :39.15   Mean   : -96.28  
+    ##  3rd Qu.:  3.53   3rd Qu.:  7.55   3rd Qu.:42.18   3rd Qu.: -81.75  
+    ##  Max.   :100.00   Max.   :169.23   Max.   :49.00   Max.   :  80.21  
+    ##  NA's   :45122    NA's   :57560    NA's   :1549    NA's   :1549
+
+Don’t worry too much about the output for now. Let’s take a closer look
+at the tibble:
+
+``` r
+View(measles)
+```
+
+View (with a capital V) opens the tibble (or data frame) in a separate
+window, allowing you to inspect the different rows and columns. At a
+glance, this tibble or “fancy” data frame, looks, more or less, like a
+well-maintained spreadsheet with each column representing a different
+variable and each row representing a different observation. This is,
+ideally, how you would structure your data when performing analyses.
+
+Taking a step back, you had only previously worked with single values
+(recall: `1+2`; `8-4`; etc.). How did you get from single values to an
+entire tibble’s worth of data?
+
+The answer has to do with different data structures. One of the simplest
+structures is a vector. A vector has to contain information of the same
+type. If you were to inspect the output of `1+2` you would see the
+following:
+
+``` r
+1+2
+```
+
+    ## [1] 3
+
+``` r
+str(1+2)
+```
+
+    ##  num 3
+
+This is simply a vector containing 1 numeric value.
+
+You can have longer numeric or integer vectors. For instance:
+
+``` r
+1:5 # the colon generates regular sequence from 1 to 5 (see ?`:` for more information) 
+```
+
+    ## [1] 1 2 3 4 5
+
+``` r
+str(1:5)
+```
+
+    ##  int [1:5] 1 2 3 4 5
+
+This is a vector containing 5 integers. You could re-create the same
+vector with the following line of code:
+
+``` r
+int_v <- c(1, 2, 3, 4, 5) # note the use of c() as a means of forming a vector
+int_v
+```
+
+    ## [1] 1 2 3 4 5
+
+``` r
+str(int_v)
+```
+
+    ##  num [1:5] 1 2 3 4 5
+
+You can have vectors containing only logical values. For instance:
+
+``` r
+set.seed(1)
+logic_v <- sample(c(T, F), 10, T) # refer to ?sample if you would like to make sense of these arguments
+logic_v
+```
+
+    ##  [1]  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE
+
+``` r
+str(logic_v)
+```
+
+    ##  logi [1:10] TRUE FALSE TRUE TRUE FALSE TRUE ...
+
+You can have vectors containing ordinal data. For instance:
+
+``` r
+factor_v <- factor(x = c("unlikely", "very likely", "impossible", "certainty", "unlikely"), # see >factor for more information
+                   levels = c("impossible", "unlikely", "very likely", "certainty"))
+factor_v
+```
+
+    ## [1] unlikely    very likely impossible  certainty   unlikely   
+    ## Levels: impossible unlikely very likely certainty
+
+``` r
+str(factor_v)
+```
+
+    ##  Factor w/ 4 levels "impossible","unlikely",..: 2 3 1 4 2
+
+You can also have vectors containing character data with no implicit
+ordering. For instance:
+
+``` r
+(character_v <- c("yellow", "orange", "green", "purple")) # by adding parentheses around the assignment, you can also get an output at the same time
+```
+
+    ## [1] "yellow" "orange" "green"  "purple"
+
+``` r
+str(character_v)
+```
+
+    ##  chr [1:4] "yellow" "orange" "green" "purple"
+
+What’s most important to grasp is that a vector with different types of
+data will invariably be made into a character vector. For instance:
+
+``` r
+(mixed_v <- c(1, TRUE, "character", 5.43, pi))
+```
+
+    ## [1] "1"                "TRUE"             "character"        "5.43"            
+    ## [5] "3.14159265358979"
+
+``` r
+str(mixed_v)
+```
+
+    ##  chr [1:5] "1" "TRUE" "character" "5.43" "3.14159265358979"
+
+Also important is that you recognize what is going on here with two
+vectors of different lengths:
+
+``` r
+v1 <- c(2, 7, 1, 0)
+v2 <- c(4, 1)
+v1 + v2
+```
+
+    ## [1] 6 8 5 1
+
+Notice that when adding the two vectors, the first elements of each
+vector are summed together, the second elements of each vector are
+summed together, the third element of `v1` and the first element of `v2`
+is summed together, and the fourth element of `v1` and the second
+element of `v2` is summed together. This is a consequence of the
+vectorization of many functions in R. This can be used to your
+advantage, but can also have unintended outcomes, so watch out\! You
+will also run into problems if your two vectors are of unequal length
+and the length of the longer vector is not a multiple of the length of
+the shorter vector.
+
+Putting everything together, you can conceptualize a data frame (or a
+tibble) as a collection of vectors. Each of these vector occupies a
+column and the vectors are of equal length.
+
+You can manually put together a small data frame with vectors using the
+`data.frame()` function. Data were randomly sampled in this fictitious
+example:
+
+``` r
+sample_df <- data.frame("participant" = c(1:10),
+                        "age" = sample(18:65, 10, T),
+                        "gender" = sample(c("M", "F"), 10, T),
+                        "outcome" = sample(c(0, 1), 10, T, prob = c(0.3, 0.7)),
+                        "location" = "Ottawa, CA")  # notice how this is only a vector of length 1, but that's OK because of vectorization!
+sample_df
+```
+
+    ##    participant age gender outcome   location
+    ## 1            1  50      M       1 Ottawa, CA
+    ## 2            2  38      M       0 Ottawa, CA
+    ## 3            3  38      M       1 Ottawa, CA
+    ## 4            4  59      F       0 Ottawa, CA
+    ## 5            5  63      M       1 Ottawa, CA
+    ## 6            6  27      M       0 Ottawa, CA
+    ## 7            7  24      F       1 Ottawa, CA
+    ## 8            8  26      F       0 Ottawa, CA
+    ## 9            9  32      F       1 Ottawa, CA
+    ## 10          10  38      M       0 Ottawa, CA
+
+``` r
+str(sample_df)
+```
+
+    ## 'data.frame':    10 obs. of  5 variables:
+    ##  $ participant: int  1 2 3 4 5 6 7 8 9 10
+    ##  $ age        : int  50 38 38 59 63 27 24 26 32 38
+    ##  $ gender     : chr  "M" "M" "M" "F" ...
+    ##  $ outcome    : num  1 0 1 0 1 0 1 0 1 0
+    ##  $ location   : chr  "Ottawa, CA" "Ottawa, CA" "Ottawa, CA" "Ottawa, CA" ...
+
+And to prove that a tibble is just a fancy data frame:
+
+``` r
+sample_tibble <- as_tibble(sample_df)
+sample_tibble
+```
+
+    ## # A tibble: 10 x 5
+    ##    participant   age gender outcome location  
+    ##          <int> <int> <chr>    <dbl> <chr>     
+    ##  1           1    50 M            1 Ottawa, CA
+    ##  2           2    38 M            0 Ottawa, CA
+    ##  3           3    38 M            1 Ottawa, CA
+    ##  4           4    59 F            0 Ottawa, CA
+    ##  5           5    63 M            1 Ottawa, CA
+    ##  6           6    27 M            0 Ottawa, CA
+    ##  7           7    24 F            1 Ottawa, CA
+    ##  8           8    26 F            0 Ottawa, CA
+    ##  9           9    32 F            1 Ottawa, CA
+    ## 10          10    38 M            0 Ottawa, CA
+
+``` r
+str(sample_tibble)
+```
+
+    ## tibble [10 × 5] (S3: tbl_df/tbl/data.frame)
+    ##  $ participant: int [1:10] 1 2 3 4 5 6 7 8 9 10
+    ##  $ age        : int [1:10] 50 38 38 59 63 27 24 26 32 38
+    ##  $ gender     : chr [1:10] "M" "M" "M" "F" ...
+    ##  $ outcome    : num [1:10] 1 0 1 0 1 0 1 0 1 0
+    ##  $ location   : chr [1:10] "Ottawa, CA" "Ottawa, CA" "Ottawa, CA" "Ottawa, CA" ...
+
+### Wrapping up
+
+This more or less wraps up the first workshop. You should export the
+measles data as the second workshop will delve deeper into data indexing
+and manipulation. Use the following to keep a local copy of the data
+around:
+
+``` r
+write_csv(measles, path = "measles.csv") # the specified path will create a data folder within your current working directory  
+```
+
+To be assured that this was exported correctly, import the csv file,
+this time from your drive, then compare it to the version downloaded
+from the internet.
+
+``` r
+measles_local <- read_csv("measles.csv")
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   index = col_double(),
+    ##   state = col_character(),
+    ##   year = col_character(),
+    ##   name = col_character(),
+    ##   type = col_character(),
+    ##   city = col_character(),
+    ##   county = col_character(),
+    ##   district = col_logical(),
+    ##   enroll = col_double(),
+    ##   mmr = col_double(),
+    ##   overall = col_double(),
+    ##   xrel = col_logical(),
+    ##   xmed = col_double(),
+    ##   xper = col_double(),
+    ##   lat = col_double(),
+    ##   lng = col_double()
+    ## )
+
+``` r
+identical(measles_local, measles)
+```
+
+    ## [1] TRUE
+
+Everything checks out\! Hope you learned something new.
+
+Consider installing `tidyverse` before the next workshop. See you next
+time\!
