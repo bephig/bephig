@@ -1,0 +1,491 @@
+---
+title: "Workshop #2: Data Wrangling with dplyr"
+author: "BEPHIG"
+date: "`r format(Sys.Date())`"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Please note that there is overlap between this workshop and the materials found in the first [workshop](https://github.com/bephig/bephig/blob/main/01_introduction/intro-to-R-RStudio.md) because of time constraints.
+Some parts have been re-worked in an attempt to streamline the workshop.
+
+# Getting started
+If you haven't done so already, install `dplyr` and `readr` (or preferrably, `tidyverse`) by using the `installed.packages()`.
+This will allow you to attach the packages.
+```{r}
+library(readr)
+library(dplyr)
+```
+
+Notice the output in the console when attaching `dplyr`.
+This is simply stating that some functions that would have been available before have been masked with functions of the same name included in the `dplyr` package.
+If you do need to use a function that has been masked, you can explicitly use these functions by specifying the package to which the masked function belongs. 
+For example, you can use `stats::filter()` to use the original `filter()` function.
+
+# Downloading data from the internet
+If you're working on your own research projects, then it will be unlikely that you'd ever need to download your data set. 
+It is more likely that you'd read in the data from your local disk. 
+Nonetheless, please download the following csv file containing data about measles vaccination rates from [rfordatascience's tidytuesday GitHub project](https://github.com/rfordatascience/tidytuesday). 
+The original source of these data is [The Wall Street Journal](https://github.com/WSJ/measles-data).
+```{r}
+measles <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv')
+```
+
+Ignore the console output for now.
+Notice that you had assigned the value of `read_csv(...)` to an object named "measles".
+This is an important step because the data set must be available in the environment in order for you to work with it. 
+
+What exactly is "measles"?
+Use the `str()` function to inspect the internal structure of the object.
+```{r}
+str(measles)
+```
+
+Based on the first line of this output, you can safely state that you are looking at something called a tibble. 
+Moreover, this tibble has dimensions of 66,113 x 16. 
+The next sixteen lines of your output all start with a dollar sign. 
+Though it may or may not be immediately obvious, each of these corresponds to a column in the "measles" object.
+That would mean that 66,113 refers to the number of rows. 
+
+Use `View()` to take a look at the object.
+```{r}
+View(measles)
+```
+
+You should see a new tab appear with what looks to be a spreadsheet of values. 
+This confirms much of the earlier speculation concerning the output of `str()`.
+
+For now, you can think of a tibble as a fancier data frame (see [here](https://r4ds.had.co.nz/tibbles.html#tibbles-vs.-data.frame) for a more detailed discussion).
+But you could be wondering what exactly is a data frame.
+Now would be a good time to take a step back and talk about data types and structures in R.
+
+# Data types
+You were briefly introduced to numeric (or "double") and logical data types in the previous workshop.
+```{r}
+str(1)
+str(TRUE)
+```
+
+Don't get too preoccupied with integers for the time being.
+```{r}
+str(1L)
+1 == 1L
+```
+
+As you can see, numeric values and integers are functionally equivalent in most contexts (more information, should you be interested, is available [here](https://r4ds.had.co.nz/vectors.html)). 
+The final data type that you will routinely encounter in everyday practice is character data. 
+```{r}
+str("hello")
+```
+
+So far, you have only looked at one value at a time.
+In terms of character data, you have only looked at one string at a time.
+To prove this point, make use the function `length()`.
+```{r}
+length(1)
+length(1L)
+length(TRUE)
+length("hello")
+```
+
+# Data structures
+What if you wanted to have an object hold multiple values?
+You would need a data structure like a vector.
+You can use `c()` to create vectors holding more than one value at a time.
+```{r}
+c(1, 2, 3)
+c(TRUE, F, FALSE, T)
+c("hello", "world")
+```
+
+Sometimes, you won't even need `c()` to create vectors.
+For example, the operator `:` generates regular sequences.
+```{r}
+1:5
+```
+
+But what if you were to combine different data types in a single vector?
+```{r}
+c(1, TRUE, "hello")
+```
+
+This doesn't appear to cause problems, but take a closer look at the internal structure.
+```{r}
+str(c(1, TRUE, "hello")) # could have assigned vector to an object to avoid re-typing it
+```
+
+You can see that this vector contains character data. 
+This is by design.
+Vectors can only hold data of the same type.
+R has defaulted to a character vector because strings can contain an arbitrary amount of data.
+
+That said, you can have R default to a different vector type if no strings are included.
+```{r}
+str(c(1, TRUE))
+```
+
+Remember how TRUE can be represented with 1 (and FALSE with 0)?
+The internal structure of `c(1, TRUE)` can therefore be a numeric vector instead of a character vector.
+
+Lastly, what if you were interested in accessing one value or a subset of values from a vector?
+You can do so with square brackets.
+Let's explore using the character vector `LETTERS`.
+```{r}
+LETTERS
+LETTERS[5] # fifth letter of the alphabet
+```
+
+As you can see, appending `[5]` to the end of `LETTERS` allows you to access the fifth letter of the alphabet.
+You can access multiple values at the same time if you supply a vector instead.
+```{r}
+LETTERS[c(1, 4, 5)] # first, fourth, and fifth letters
+```
+
+You can also access values based on criterion or criteria.
+This may be more easily illustrated with numbers instead of letters.
+```{r}
+set.seed(1)
+NUMBERS <- rnorm(100,0,50)
+NUMBERS
+```
+
+The output includes the 100 values drawn from a normal distribution with mean of 0 and standard deviation of 50. 
+What if you only wanted values greater than zero?
+```{r}
+NUMBERS[NUMBERS>0]
+```
+
+The following would have also worked
+```{r}
+NUMBERS[!(NUMBERS<=0)]
+```
+
+Why does this work?
+It works because you are supplying a logical vector that is the same length as the original.
+The only values of that vector that will be accessed are those that are TRUE.
+
+One peculiarity of note is that a shorter logical vector could also be used.
+```{r}
+NUMBERS[c(TRUE, FALSE)]
+```
+
+This is an unusual way to go about it, but will give you all of the values in odd numbered positions (i.e., the first, third, fifth, seventh, ..., ninety-ninth values). 
+This works because many functions in R are vectorized.
+What does this mean?
+If the length of the longer vector is a multiple of the length of the shorter vector, R will loop through the shorter vector as needed.
+```{r}
+c(1, 30) + c(10, 84, 0, -1)
+```
+
+In the example above, you are attempting to add together two vectors. 
+The value in the first position of each vector were added together.
+Then, the value in the second position of each vector were added together.
+Normally, the value in the third position of each vector would be added together.
+However, there is no third position in the first vector.
+
+Since the length of the second vector (4) is a multiple of that of the first (2), R will loop through the shorter vector. 
+The value in the first position of the first vector will be added to the value in the third position of the second vector.
+Finally, the value in the second position of the first vector will be added to the value in the fourth position of the second vector.
+
+You will run into problems if the longer vector is not a multiple of the shorter vector.
+```{r}
+c(1, 30) + c(10, 84, 0)
+```
+
+Hopefully, by now, you should have also noticed something else when using the function `str()` on a vector.
+```{r}
+str(1:5)
+```
+
+Does the output remind you of something else that you saw earlier when examining the "measles" tibble?
+```{r}
+str(measles)
+```
+
+Notice the resemblance to each of the sixteen lines starting with a dollar sign?
+Hopefully, it should now be clear that a tibble or a data frame is composed of vectors arranged vertically in columns.
+In fact, you can create your own data frame from vectors as follows:
+```{r}
+numeric_v <- 1:6
+character_v <- c("a", "b", "c", "d", "e", "f")
+logical_v <- c(T, T, F)
+integer_v <- 1L
+
+sample_df <- data.frame(
+  numeric = numeric_v,
+  character = character_v,
+  logical = logical_v,
+  integer = integer_v
+  )
+
+sample_df
+str(sample_df)
+```
+
+And to, once again, show you that a tibble is just a fancy data frame, coerce the object using the function `as_tibble()`:
+```{r}
+as_tibble(sample_df)
+str(as_tibble(sample_df))
+```
+
+You may have noticed that vectorization was deliberately used in constructing this data frame.
+Interestingly, `tibble()` only allows for the recycling of values if the supplied length is one (see `?tibble::tibble` for documentation).
+This probably makes more sense with cases where you're adding a column of constant values. 
+You would rarely make use of vectorization if each row of data is supposed to correspond to a different observation. 
+It would also be rare for you to prepare an entire data frame in R because it is oftentimes easier for you to save a spreadsheet as a csv file and import it that way.
+
+You can summarize the data in a tibble or data frame with the `summary()` function:
+```{r}
+summary(sample_df)
+```
+
+You can go from data frame to individual vectors in several ways:
+```{r}
+sample_df$numeric # by naming the column
+sample_df[,1] # by specifying the column number
+```
+
+Analogous to the previous example where you had accessed certain values in your vector by specifying the positions (in square brackets), you can access certain columns or rows by specifying their positions (in square brackets).
+The value(s) before the comma indicate the position of rows to be accessed. 
+The value(s) after the comma indicate the position of columns to be accessed.
+
+To illustrate, you can determine which rows meet a specific criterion, then supply the positions of these rows in square brackets.
+```{r}
+which(sample_df$logical == TRUE)
+```
+
+Alternatively, you can then filter the data frame directly:
+```{r}
+sample_df[which(sample_df$logical == TRUE),] # functionally the same as sample_df[c(1, 2, 4, 5),]
+```
+
+In essence, you have accessed rows 1, 2, 4, and 5 (those meeting the criterion) by supplying these row numbers within the square brackets. 
+If you were interested in the character values of observations that are TRUE, you can combine these two criteria as follows:
+```{r}
+sample_df[which(sample_df$logical == TRUE), c("character", "logical")]
+```
+
+Instead of finding the position where these columns can be found (using something like `which(colnames(sample_df) %in% c("character", "logical"))`), the names of the columns can be supplied within a character vector and placed after the comma. 
+This also works if you wanted to access certain rows within a data frame while maintaining the data structure. 
+```{r}
+sample_df["numeric"] # by naming the column, but this time within square brackets and with quotations
+sample_df[c("numeric", "character")]
+```
+
+While there are several more data structures, one last structure that you may routinely encounter is a list.
+It is unlikely that you'd routinely use a list in routine data analyses, but they can be used to store different data types and data structures.
+```{r}
+sample_list <- list() # create an empty list
+sample_list$character <- character_v
+sample_list$numeric <- list(integer = integer_v, numeric = numeric_v)
+sample_list$df <- sample_df
+sample_list
+```
+
+The list includes a character vector, a sublist with an integer and a numeric vector, and a data frame. 
+Notice how they are not of the same length or even data structure.
+
+You can access individual components within the framework of a list with square brackets.
+```{r}
+sample_list[1]
+sample_list["df"]
+```
+
+You can also access these components in their original data structures with a dollar sign or with square brackets.
+```{r}
+sample_list$character
+sample_list[[3]]
+sample_list[["numeric"]]
+```
+
+The idea of accessing sublists is the same as lists (with extra steps).
+```{r}
+sample_list$numeric[1] # as a list
+sample_list[["numeric"]]$integer # as a vector
+```
+
+# dplyr
+
+Now that you have seen how to work with data using base R functions, it is time to turn your attention to data wrangling with the `dplyr` package. 
+Let's take a quick peak at the measles data frame.
+```{r}
+measles
+```
+
+On first glance, you can already see that there are a lot of values that are missing (NA). 
+Just how many NAs are there under each column?
+```{r}
+apply(measles, 2, function(x) sum(is.na(x)))
+```
+
+The `apply()` function returns a vector of values obtained by applying a function to a margin (in this scenario: columns) of an array (in this scenario: a tibble).
+Don't worry too much about the anonymous function used here.
+
+Knowing that there are no NAs in some of these columns is helpful, but what is actually contained within these columns? 
+The data dictionary is available [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-02-25/readme.md).
+
+There is obvious a lot of data here.
+Let's focus on only a couple of states and filter out the rest.
+First, identify the unique names under the column "State".
+```{r}
+unique(measles$state)
+```
+
+Then, use `filter()` to keep only California, Michigan, New York, and Utah (these were chosen at a whim). 
+Be sure to assign it to another object to keep the original measles data frame in the environment.
+```{r}
+CAMINYUT <- filter(measles, state == "California" | state == "Michigan" | state == "New York" | state == "Utah")
+```
+
+Let's take a look at the unique names under the column "state" again.
+```{r}
+unique(CAMINYUT$state)
+```
+
+Success! A cleaner way of filtering the data may have looked something like this:
+```{r}
+filter(measles, state %in% c("California", "Michigan", "New York", "Utah"))
+```
+
+A quick glance at the dimensions of CAMINYUT and the console output indicates that the two resulting data frames share the same dimensions. 
+If you are interested in arranging the data by enrollment, you can use the `arrange()` function:
+```{r}
+arrange(CAMINYUT, enroll)
+arrange(CAMINYUT, desc(enroll))
+```
+
+For most analysis, the ordering of your data is unlikely to make a difference, but it can be helpful if you wanted to take a quick glance at the data.
+
+If you decide that you no longer need certain columns, you can remove them with `select()`. 
+Let's remove lat and lng.
+You could explicitly name all other columns.
+```{r}
+select(CAMINYUT, "index", "state", "year", "name", "type", "city", "county", "district", "enroll", "mmr", "overall", "xrel", "xmed", "xper")
+```
+
+Alternatively, you can take advantage of the fact that lat and lng are the last two columns and keep all columns between index and xper instead.
+```{r}
+select(CAMINYUT, "index":"xper")
+```
+
+Another method is to state the names of columns you no longer need, but add a subtraction or a minus symbol before it.
+```{r}
+select(CAMINYUT, -"lat", -"lng")
+```
+
+What if you wanted to rearrange the columns.
+For example, how would you move the mmr column immediately to the right of index?
+You could use `select()`.
+```{r}
+select(CAMINYUT, index, mmr, everything())
+```
+
+You could also use `relocate()` to move several columns at once.
+```{r}
+relocate(CAMINYUT, enroll:overall, .after = index)
+```
+
+What if you wanted to rename columns?
+For example, you may want to rename overall to overall_rate to more clearly indicate that this column reflects percent vaccination.
+You can do that using the `rename()` function.
+```{r}
+rename(CAMINYUT, overall_rate = overall)
+```
+
+What if you wanted to change the values of a column?
+Perhaps you want decimal proportions rather than percentages.
+Give `mutate()` a try.
+```{r}
+mutate(CAMINYUT, overall = overall/100)
+```
+
+Perhaps you want to shorten Public and Private to Pub and Priv, respectively, but keep all other labels under type the same:
+```{r}
+mutate(CAMINYUT, type = ifelse(type == "Public", "Pub", 
+                               ifelse(type == "Private", "Priv", type)))
+```
+
+
+You can also use `mutate()` to create new columns.
+```{r}
+CAMINYUT %>% 
+  mutate(overall_rate = overall/100) %>% 
+  select(index:overall, overall_rate)
+```
+
+Notice the pipe operator `%>%` (keyboard shortcut: Ctrl+Shift+M or Cmd+Shift+M) introduced in the above lines of code.
+You can think of the pipe as feeding whatever is on the left of the operator into the function as the first argument. 
+This works nicely for dplyr because the first argument is invariably the data structure.
+
+If you want to pipe something into a function as a second or a third argument, you would have to do something like this:
+```{r}
+mean_val <- 10
+set.seed(1)
+mean_val %>% rnorm(5, ., 1)
+```
+
+`.` denotes the position to which you would pipe.
+
+Why use the pipe?
+The pipe makes for easier to read code.
+You could have done something like this instead, but it is harder to read at a glance:
+```{r}
+select(mutate(CAMINYUT, overall_rate = overall/100), index:overall, overall_rate)
+```
+
+There are many other functions included in `dplyr`.
+The last ones that you should try out today are `group_by()` and `summarise()`. 
+Give this a try:
+```{r}
+CAMINYUT %>% 
+  group_by(state) %>% 
+  summarise(mean_mmr = mean(mmr))
+```
+
+The output shows the average MMR vaccination rate for the different states. 
+Perhaps it would have been a smart idea to filter out all states without MMR data (like Michigan).
+
+Let's end by combining two separate different frames with one column in common.
+First, split up CAMINYUT, but keep enough information to link the two separate data frames.
+```{r}
+CAMINYUT1 <- CAMINYUT %>% 
+  select(index:district, "enroll", "mmr", "overall")
+
+CAMINYUT2 <- CAMINYUT %>% 
+  select(index:district, "xrel", "xmed", "xper")
+
+CAMINYUT1
+CAMINYUT2
+```
+
+Perhaps you started working with two data frames. 
+One with the actual vaccination data and one with the percentage of students exempt from vaccinations for religious, medical, or personal reasons.
+Let's combine these two data frames using join functions. 
+In this case, it seems appropriate to use `left_join()`.
+```{r}
+left_join(CAMINYUT1, CAMINYUT2)
+```
+
+Most of the time, the function will be able to piece together which columns are common between two data frames.
+This will inform R how best to combine the two data frames into one.
+If you have columns with slightly different names, you will have to specify additional arguments (see `?left_join()`).
+
+# Wrapping up by exporting data
+This more or less wraps up the second workshop. 
+
+Let's review how to export data.
+```{r}
+write_csv(measles, path = "measles.csv") # the specified path will create a data folder within your current working directory  
+```
+
+To make sure that this was exported correctly, import the csv file, this time from your local disk, then compare it to the version that still exists in your environment
+```{r}
+measles_local <- read_csv("measles.csv")
+identical(measles_local, measles)
+```
+
+Everything checks out! 
+Hope you learned something new.
+
+See you next time! 
