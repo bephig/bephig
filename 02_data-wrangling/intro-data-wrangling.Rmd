@@ -11,7 +11,7 @@ Please note that there is overlap between this workshop and the materials found 
 Some parts have been re-worked in an attempt to streamline the workshop.
 
 # Getting started
-If you haven't done so already, install `dplyr` and `readr` (or preferrably, `tidyverse`) by using the `installed.packages()`.
+If you haven't done so already, install `dplyr` and `readr` (or preferrably, `tidyverse`) by using the `install.packages()`.
 This will allow you to attach the packages.
 ```{r}
 library(readr)

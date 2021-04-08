@@ -40,3 +40,4 @@ vignettes/*.pdf
 
 # Files
 /measles.csv
+/03_ggplot2/life-expectancy-selected-countries.png

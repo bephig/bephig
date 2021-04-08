@@ -1,0 +1,362 @@
+---
+title: "Workshop #3: Data Visualization with ggplot2"
+author: "BEPHIG"
+date: "`r format(Sys.Date())`"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Notes on the previous workshop are available [here](https://github.com/bephig/bephig/tree/main/02_data-wrangling).
+
+# Getting started
+If you haven't done so already, please install `tidyverse` by using the function `install.packages()`.
+Once installed, attach the packages.
+```{r}
+library(tidyverse)
+```
+
+In addition to the packages that you've worked with in the past (namely `dplyr` and `readr`), this command also attaches `ggplot2`, which is the focus of this workshop.
+
+# Accessing data for visualization
+As stated in the previous workshop, you'd normally be importing your own data (in the form of a spreadsheet or a CSV file) into R using commands such as `readxl::read_xlsx()` or `readr::read_csv()`.
+But to ensure that you can follow along with the instructions provided here, let's install the `gapminder` package using the function `install.packages()` then attach it using `library()`.
+```{r}
+library(gapminder)
+```
+
+You can then use `?gapminder` to pull up the documentation if you have any questions about what you've just installed.
+
+Briefly, `gapminder` is both a package and a tibble (recall that a tibble is, for our purposes, a fancier data frame).
+You can inspect `gapminder` like you would any other data frame:
+```{r}
+head(gapminder) # first few rows
+tail(gapminder) # last few rows
+View(gapminder)
+```
+
+You can also learn more about the data types found under each column using the function `str()`:
+```{r}
+str(gapminder)
+```
+
+Based on the output of this single command, you now know that:
+ - There are 1,704 columns and 6 rows
+ - The first column contains the names of 142 countries organized alphabetically from Afghanistan to Zimbabwe
+ - The second column contains the continent to which these countries belong
+ - The third column contains the year during which the data were collected
+ - The fourth column contains data on life expectancy
+ - The fifth column contains data on population size
+ - The sixth column contains data on the Gross Domestic Product per capita
+ 
+Again, you can verify these claims by checking the documentation.
+
+# Preparing the data for visualization
+Gapminder is unique in that you can call for the data frame without having it exist in your environment (check the panes to see what is currently in your environment if you're using RStudio or use the function `ls()`). 
+To get used to the practice of assigning values (here, a data frame) to the environment for use in the future, assign `gapminder` to your environment.  
+```{r}
+gm <- gapminder
+```
+
+Now, instead of typing gapminder over and over again, you can type `gm` instead,
+
+# Getting started with ggplot2
+There are countless different resources out there to learn ggplot2. 
+The intention of this workshop is to get acquainted with this package so you'll have some familiarity when looking things up on the internet.
+
+First, let's consider what to plot. 
+Let's try plotting a factor against numeric data (e.g., country against life expectancy).
+
+First, start with `ggplot()` to initiate a new plot and supply the data (`gm`) as its argument.
+```{r}
+ggplot(gm)
+```
+
+If you're using RStudio, you should see a blank plot somewhere on your screen.
+Think of this as the empty canvas for your future figure.
+Let's assign this canvas to the environment.
+You will see why this is useful later.
+```{r}
+p <- ggplot(gm)
+```
+
+Next, let's plot life expectancy on the x-axis and the corresponding countries on the y-axis. 
+There are many ways to achieve the same goal (i.e., plot the same figure) using ggplot2. 
+One way is to map the aesthetics (i.e., the columns in `gm`) when specifying the type of figure that you want to produce. 
+To illustrate, let's add a layer ("geom") to our empty canvas, `p`: 
+```{r}
+p + geom_point(aes(x = lifeExp, y = country))
+```
+
+Oh no!
+This doesn't look useful at all. 
+The reasons should be obvious:
+ - There are a lot of countries represented in this figure (resulting in the barely legible y-axis)
+ - There are multiple times at which life expectancy was recorded for each country and it's impossible to know if there is a trend over time or population size
+
+Let's address the first of these two these issues by:
+ - Choosing a year to compare the different countries
+ - Sampling a handful of countries instead of plotting data from all 142 countries included in this data set
+ 
+In order to accomplish these tasks, you will have to do some data wrangling with `dplyr`. 
+Let's choose 25 countries at random. 
+```{r}
+set.seed(2021) # this ensures reproducibility of our "random" sampling
+(countries_sampled <- sample(unique(gm$country), 25))
+```
+
+Let's also find out the year with the most recent data on life expectancy across all of these 25 countries.
+```{r}
+max_year <- gm %>% 
+  filter(country %in% countries_sampled,
+         !is.na(lifeExp)) %>%  # technically not needed; there are no missing values in this data set
+  group_by(country) %>% 
+  summarize(max_year = max(year)) %>% 
+  pull(max_year) %>%
+  unique()
+max_year
+```
+
+The most recent life expectancy data is from 2007 for all 25 countries. 
+With this knowledge, let's create a new data frame that contains only the data from these 25 countries corresponding to the year 2007.
+```{r}
+gm_filtered <- gm %>% 
+  filter(country %in% countries_sampled,
+         year == max_year)
+```
+
+Use `View()` to inspect this data frame.
+It looks to be much more manageable in size!
+```{r}
+View(gm_filtered)
+```
+
+Since the data being supplied to ggplot has changed, you will need a new canvas:
+```{r}
+p <- ggplot(gm_filtered, aes(x = lifeExp, y = country))
+p
+```
+
+As can be seen here, the canvas won't be entirely blank if the plot aesthetics are specified in the first step (i.e., as an argument to `ggplot`).
+This can also reduce the amount of redundancy later on when specifying each additional layer to be added to the canvas since each geom "inherits" these aesthetics if left unspecified.
+```{r}
+p1 <- p + geom_point()
+p1
+```
+
+This is an improvement in that it is legible and not overwhelming in terms of data. 
+However, this is not a useful visualization of the data because the levels of the factor were arranged alphabetically:
+```{r}
+levels(gm_filtered$country)
+```
+
+This makes it more difficult to interpret the figure on first glance. 
+What you could do is re-order the different levels of the factor before plotting:
+```{r}
+gm_filtered$country <- fct_reorder(gm_filtered$country, gm_filtered$lifeExp)
+levels(gm_filtered$country)
+```
+
+The levels of the factor `country` are now organized by increasing life expectancy in the year 2007.
+The countries that have been filtered out follow the first 25 and remain organized in alphabetical order.
+It may help to drop these unused levels to mitigate future risk of problems.
+```{r}
+gm_filtered$country <- droplevels(gm_filtered$country)
+levels(gm_filtered$country)
+```
+
+Let's try plotting again.
+```{r}
+p2 <- gm_filtered %>% 
+  ggplot(aes(x = lifeExp, y = country)) + 
+  geom_point()
+p2
+```
+
+Much better, but this could still be improved.
+Let's change the axis labels to something more descriptive.
+```{r}
+p3 <- p2 +
+  xlab("Life expectancy in 2007") +
+  ylab("Country") +
+  theme_bw()
+
+p3
+```
+
+You can save this figure to your hard drive with the command `ggsave()`.
+```{r}
+ggsave("life-expectancy-selected-countries.png", p3, device = "png")
+```
+
+You can supply many more arguments to specify the file type, size, and resolution of the exported figure. 
+See `?ggsave` for more information.
+
+# More complicated figures
+
+Say you wanted to visualize the average life expectancy of each continent and each country in 2007 at the same time. 
+Could this be done?
+Let's give it a try.
+
+First, let's filter the data to only the year 2007.
+```{r}
+gm_filtered <- gm %>% 
+  filter(year == 2007)
+```
+
+Then, let's try visualizing the distribution of life expectancy by continent using boxplots.
+```{r}
+p <- gm_filtered %>% 
+  ggplot() +
+  geom_boxplot(aes(x = continent, y = lifeExp), outlier.shape = NA)
+p
+```
+
+Though this isn't exactly in the right order (in terms of increasing median life expectancy as one moves from left to right), let's ignore this shortcoming for the remainder of the workshop (you should be able to figure out how to re-order the levels of the factor based on the example above).
+Now, add in the individual countries:
+```{r}
+p1 <- p +
+  geom_point(aes(x = country, y = lifeExp))
+p1
+```
+
+Let's try this again.
+```{r}
+p1 <- p +
+  geom_point(aes(x = continent, y = lifeExp))
+p1
+```
+
+The problem before was the introduction of a different aesthetic mapping for the x-axis. 
+It is not necessary to specify country when plotting individual data points as this would result in the need for the scale to accommodate both continents and countries. 
+
+`geom_boxplot` is capable of plotting the summary statistics and `geom_point` plots the individual points (hence explaining why outliers were purposely removed in the first example).
+
+Additional instructions can be added to our canvas `p` to improve this plot:
+```{r}
+p1 <- p +
+  geom_jitter(aes(x = continent, y = lifeExp), width = 0.1, alpha = 1/4)
+p1
+```
+
+Jittering, by a width of 0.1 in this example, helps distinguish neighbouring points from one another. 
+The opacity/transparency, size, and colour of these points can also be changed to help further differentiate these points:
+```{r}
+p2 <- p +
+  geom_jitter(aes(x = continent, y = lifeExp, size = pop, colour = pop), width = 0.1, alpha = 1/4) +
+  scale_colour_viridis_c() +
+  guides(colour = guide_legend(title = "population"), size = guide_legend(title = "population")) +
+  ylab("life expectancy in 2007")
+  
+p2
+```
+
+Now, let's play around with some other variables. 
+Perhaps it might be of interest to examine the association between life expectancy and population.
+Let's quickly plot all of the data to explore the relationship.
+```{r}
+ggplot(gm) +
+  geom_point(aes(y = lifeExp, x = pop))
+```
+
+There seems to be some sort of pattern, but it's hard to tell.
+Let's try to colour code these data by year.
+```{r}
+ggplot(gm) + 
+  geom_point(aes(x = pop, y = lifeExp, colour = year))
+```
+
+This is not too useful.
+Notice how most of the data is left of 300,000,000 on the x-axis?
+Let's try filtering out that data.
+```{r}
+gm %>% 
+  filter(pop < 3e8) %>% 
+  ggplot() +
+  geom_point(aes(x = pop, y = lifeExp, colour = year))
+```
+
+Let's take a step back to examine what was filtered out.
+```{r}
+options(tibble.print_max = Inf) # to show all rows
+print(filter(gm, pop >=3e8))
+```
+
+It would seem that China and India had exceeded the threshold every year that these data were collected.
+The US only exceed that threshold in the last year the data were collected. 
+
+Maybe it makes sense to exclude China and India, but not the US, for visualization purposes.
+```{r}
+gm %>% 
+  filter(country != "China" & country != "India") %>% 
+  ggplot() +
+  geom_point(aes(x = pop, y = lifeExp, colour = year))
+```
+
+What else can we do with this data?
+We could join data from the same country together in a smooth curve
+```{r}
+gm %>% 
+  filter(country != "China" & country != "India") %>% 
+  ggplot() + 
+  geom_point(aes(x = pop, y = lifeExp, colour = year)) +
+  stat_smooth(aes(x = pop, y = lifeExp, group = country), geom = "line", alpha = 0.1, se = F)
+```
+
+Again, this is still a mess, but there seems to be an upward trajectory between life expectancy and population size for most countries.
+Is there a good way to include data from China and India without having the smoothed curves of these two countries displaced far to the right of all other curves? 
+Let's try re-scaling our x-axis:
+```{r}
+gm %>% 
+  ggplot() + 
+  geom_point(aes(x = pop, y = lifeExp, colour = year)) +
+  stat_smooth(aes(x = pop, y = lifeExp, group = country), geom = "line", alpha = 0.1, se = F) +
+  scale_x_log10()
+```
+
+Let's also try separating these curves by continent.
+This can be accomplished using `facet_grid()`:
+```{r}
+gm %>% 
+  ggplot() + 
+  geom_point(aes(x = pop, y = lifeExp, colour = year)) +
+  stat_smooth(aes(x = pop, y = lifeExp, group = country), geom = "line", alpha = 0.1, se = F) +
+  scale_x_log10() +
+  facet_grid(.~continent)
+```
+
+If you were more interested in trends over time (as opposed to trends over population size), give this a try:
+```{r}
+gm %>% 
+  ggplot() + 
+  stat_smooth(aes(x = year, y = lifeExp, group = country), geom = "line", alpha = 0.1, se = F) +
+  facet_grid(.~continent)
+```
+
+We can even try averaging life expectancy at the different years on top of this figure.
+```{r}
+suppl <- gm %>% 
+  group_by(continent, year) %>% 
+  summarize(mean_lifeExp = mean(lifeExp))
+
+View(suppl)
+
+ggplot() + 
+  stat_smooth(aes(x = year, y = lifeExp, group = country), geom = "line", alpha = 0.1, se = F,
+              data = gm) +
+  stat_smooth(aes(x = year, y = mean_lifeExp), geom = "line", alpha = 1, colour = "red", se = F,
+              data = suppl) +
+  facet_grid(.~continent) +
+  theme_bw()
+
+```
+
+Notice how this last figure used data from two separate sources (i.e., `gm` and `suppl`) and had different aesthetic mappings for the two layers added to the canvas?
+This demonstrates the flexibility afforded by `ggplot2` when used for data visualization and exploration.
+
+# Summary
+The `ggplot2` package is a great way to explore data. 
+It is well-supported by a dedicated community and free-to-use. 
+Moreover, the figures are readily reproducible if you have access to both the code and the data sets.
+
+Until next time!
