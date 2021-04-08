@@ -51,7 +51,7 @@ Based on the output of this single command, you now know that:
  
 Again, you can verify these claims by checking the documentation.
 
-# Preparing the data for visualizationq
+# Preparing the data for visualization
 Gapminder is unique in that you can call for the data frame without having it exist in your environment (check the panes to see what is currently in your environment if you're using RStudio or use the function `ls()`). 
 To get used to the practice of assigning values (here, a data frame) to the environment for use in the future, assign `gapminder` to your environment.  
 ```{r}

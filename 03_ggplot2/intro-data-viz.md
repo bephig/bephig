@@ -108,7 +108,7 @@ contains data on the Gross Domestic Product per capita
 
 Again, you can verify these claims by checking the documentation.
 
-# Preparing the data for visualizationq
+# Preparing the data for visualization
 
 Gapminder is unique in that you can call for the data frame without
 having it exist in your environment (check the panes to see what is
