@@ -1,7 +1,7 @@
 Workshop \#2: Data Wrangling with dplyr
 ================
 BEPHIG
-2020-11-09
+2021-04-07
 
 Please note that there is overlap between this workshop and the
 materials found in the first
@@ -12,7 +12,7 @@ attempt to streamline the workshop.
 # Getting started
 
 If you haven’t done so already, install `dplyr` and `readr` (or
-preferrably, `tidyverse`) by using the `installed.packages()`. This will
+preferrably, `tidyverse`) by using the `install.packages()`. This will
 allow you to attach the packages.
 
 ``` r
@@ -54,7 +54,8 @@ Journal](https://github.com/WSJ/measles-data).
 measles <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv')
 ```
 
-    ## Parsed with column specification:
+    ## 
+    ## ── Column specification ────────────────────────────────────────────────────────
     ## cols(
     ##   index = col_double(),
     ##   state = col_character(),
@@ -86,7 +87,7 @@ internal structure of the object.
 str(measles)
 ```
 
-    ## tibble [66,113 × 16] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+    ## spec_tbl_df[,16] [66,113 × 16] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
     ##  $ index   : num [1:66113] 1 2 3 4 5 6 7 8 9 10 ...
     ##  $ state   : chr [1:66113] "Arizona" "Arizona" "Arizona" "Arizona" ...
     ##  $ year    : chr [1:66113] "2018-19" "2018-19" "2018-19" "2018-19" ...
@@ -456,7 +457,7 @@ examining the “measles” tibble?
 str(measles)
 ```
 
-    ## tibble [66,113 × 16] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+    ## spec_tbl_df[,16] [66,113 × 16] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
     ##  $ index   : num [1:66113] 1 2 3 4 5 6 7 8 9 10 ...
     ##  $ state   : chr [1:66113] "Arizona" "Arizona" "Arizona" "Arizona" ...
     ##  $ year    : chr [1:66113] "2018-19" "2018-19" "2018-19" "2018-19" ...
@@ -553,7 +554,7 @@ as_tibble(sample_df)
 str(as_tibble(sample_df))
 ```
 
-    ## tibble [6 × 4] (S3: tbl_df/tbl/data.frame)
+    ## tibble[,4] [6 × 4] (S3: tbl_df/tbl/data.frame)
     ##  $ numeric  : int [1:6] 1 2 3 4 5 6
     ##  $ character: chr [1:6] "a" "b" "c" "d" ...
     ##  $ logical  : logi [1:6] TRUE TRUE FALSE TRUE TRUE FALSE
@@ -789,18 +790,18 @@ measles
 ```
 
     ## # A tibble: 66,113 x 16
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Ariz… 2018… A J … Publ… Noga… Santa… NA           51   100      -1
-    ##  2     2 Ariz… 2018… Acad… Char… Tucs… Pima   NA           22   100      -1
-    ##  3     3 Ariz… 2018… Acad… Char… Tucs… Pima   NA           85   100      -1
-    ##  4     4 Ariz… 2018… Acad… Char… Phoe… Maric… NA           60   100      -1
-    ##  5     5 Ariz… 2018… Accl… Char… Phoe… Maric… NA           43   100      -1
-    ##  6     6 Ariz… 2018… Alfr… Publ… Phoe… Maric… NA           36   100      -1
-    ##  7     7 Ariz… 2018… All … Char… Phoe… Maric… NA           24   100      -1
-    ##  8     8 Ariz… 2018… Amer… Char… Yuma  Yuma   NA           22   100      -1
-    ##  9     9 Ariz… 2018… Ariz… Priv… Phoe… Maric… NA           26   100      -1
-    ## 10    10 Ariz… 2018… Ariz… Publ… San … Yuma   NA           78   100      -1
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Arizo… 2018-… A J Mit… Publ… Noga… Santa… NA           51   100      -1
+    ##  2     2 Arizo… 2018-… Academy… Char… Tucs… Pima   NA           22   100      -1
+    ##  3     3 Arizo… 2018-… Academy… Char… Tucs… Pima   NA           85   100      -1
+    ##  4     4 Arizo… 2018-… Academy… Char… Phoe… Maric… NA           60   100      -1
+    ##  5     5 Arizo… 2018-… Acclaim… Char… Phoe… Maric… NA           43   100      -1
+    ##  6     6 Arizo… 2018-… Alfred … Publ… Phoe… Maric… NA           36   100      -1
+    ##  7     7 Arizo… 2018-… All Abo… Char… Phoe… Maric… NA           24   100      -1
+    ##  8     8 Arizo… 2018-… Amerisc… Char… Yuma  Yuma   NA           22   100      -1
+    ##  9     9 Arizo… 2018-… Arizona… Priv… Phoe… Maric… NA           26   100      -1
+    ## 10    10 Arizo… 2018-… Arizona… Publ… San … Yuma   NA           78   100      -1
     ## # … with 66,103 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -867,18 +868,18 @@ filter(measles, state %in% c("California", "Michigan", "New York", "Utah"))
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -892,18 +893,18 @@ arrange(CAMINYUT, enroll)
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1  6550 Cali… 2018… All … Priv… San … Marin  NA            1    -1      -1
-    ##  2  6557 Cali… 2018… Almo… Priv… Oran… Sacra… NA            1    -1      -1
-    ##  3  6564 Cali… 2018… Amaa… Priv… Anah… Orange NA            1    -1      -1
-    ##  4  6567 Cali… 2018… Anit… Priv… Duar… Los A… NA            1    -1      -1
-    ##  5  6610 Cali… 2018… Beac… Priv… Mont… Shasta NA            1    -1      -1
-    ##  6  6617 Cali… 2018… Bere… Priv… Ange… San B… NA            1    -1      -1
-    ##  7  6634 Cali… 2018… Bibl… Priv… Mary… Yuba   NA            1    -1      -1
-    ##  8  6643 Cali… 2018… Biol… Priv… La M… Los A… NA            1    -1      -1
-    ##  9  6645 Cali… 2018… Blai… Priv… El D… El Do… NA            1    -1      -1
-    ## 10  6667 Cali… 2018… Brid… Priv… Perr… River… NA            1    -1      -1
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1  6550 Calif… 2018-… All Chi… Priv… San … Marin  NA            1    -1      -1
+    ##  2  6557 Calif… 2018-… Almonda… Priv… Oran… Sacra… NA            1    -1      -1
+    ##  3  6564 Calif… 2018-… Amaanah… Priv… Anah… Orange NA            1    -1      -1
+    ##  4  6567 Calif… 2018-… Anita O… Priv… Duar… Los A… NA            1    -1      -1
+    ##  5  6610 Calif… 2018-… Beacon … Priv… Mont… Shasta NA            1    -1      -1
+    ##  6  6617 Calif… 2018-… Berean … Priv… Ange… San B… NA            1    -1      -1
+    ##  7  6634 Calif… 2018-… Bible B… Priv… Mary… Yuba   NA            1    -1      -1
+    ##  8  6643 Calif… 2018-… Biola Y… Priv… La M… Los A… NA            1    -1      -1
+    ##  9  6645 Calif… 2018-… Blaise … Priv… El D… El Do… NA            1    -1      -1
+    ## 10  6667 Calif… 2018-… Bridges… Priv… Perr… River… NA            1    -1      -1
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -912,18 +913,18 @@ arrange(CAMINYUT, desc(enroll))
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1   482 Utah  2017… Trav… Publ… Lehi  Utah   NA         1246  93.5      -1
-    ##  2   535 Utah  2017… Vine… Publ… Orem  Utah   NA         1202  91.6      -1
-    ##  3   432 Utah  2017… Bluf… Publ… Bluf… Salt … NA         1179  94.7      -1
-    ##  4   468 Utah  2017… Fox … Publ… Lehi  Utah   NA         1115  93.8      -1
-    ##  5   281 Utah  2017… Foot… Publ… Rive… Salt … NA         1056  96.6      -1
-    ##  6   520 Utah  2017… Eagl… Publ… Lehi  Utah   NA         1056  92.2      -1
-    ##  7   326 Utah  2017… Sout… Publ… Sout… Salt … NA         1046  96.0      -1
-    ##  8   117 Utah  2017… Sand… Publ… Layt… Davis  NA         1042  98.3      -1
-    ##  9   499 Utah  2017… Free… Publ… High… Utah   NA         1032  92.9      -1
-    ## 10   499 Utah  2017… Free… Publ… High… Utah   NA         1032  92.9      -1
+    ##    index state year   name      type  city  county district enroll   mmr overall
+    ##    <dbl> <chr> <chr>  <chr>     <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1   482 Utah  2017-… Traverse… Publ… Lehi  Utah   NA         1246  93.5      -1
+    ##  2   535 Utah  2017-… Vineyard… Publ… Orem  Utah   NA         1202  91.6      -1
+    ##  3   432 Utah  2017-… Bluffdal… Publ… Bluf… Salt … NA         1179  94.7      -1
+    ##  4   468 Utah  2017-… Fox Holl… Publ… Lehi  Utah   NA         1115  93.8      -1
+    ##  5   281 Utah  2017-… Foothill… Publ… Rive… Salt … NA         1056  96.6      -1
+    ##  6   520 Utah  2017-… Eaglecre… Publ… Lehi  Utah   NA         1056  92.2      -1
+    ##  7   326 Utah  2017-… South Jo… Publ… Sout… Salt … NA         1046  96.0      -1
+    ##  8   117 Utah  2017-… Sand Spr… Publ… Layt… Davis  NA         1042  98.3      -1
+    ##  9   499 Utah  2017-… Freedom … Publ… High… Utah   NA         1032  92.9      -1
+    ## 10   499 Utah  2017-… Freedom … Publ… High… Utah   NA         1032  92.9      -1
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -940,18 +941,18 @@ select(CAMINYUT, "index", "state", "year", "name", "type", "city", "county", "di
 ```
 
     ## # A tibble: 23,328 x 14
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 3 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>
 
@@ -964,18 +965,18 @@ select(CAMINYUT, "index":"xper")
 ```
 
     ## # A tibble: 23,328 x 14
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 3 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>
 
@@ -987,18 +988,18 @@ select(CAMINYUT, -"lat", -"lng")
 ```
 
     ## # A tibble: 23,328 x 14
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 3 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>
 
@@ -1011,18 +1012,18 @@ select(CAMINYUT, index, mmr, everything())
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index   mmr state year  name  type  city  county district enroll overall
-    ##    <dbl> <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl>   <dbl>
-    ##  1     1    99 Cali… 2018… Abby… Publ… Teme… River… NA          137      96
-    ##  2     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  3     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  4     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  5     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  6     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  7     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  8     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ##  9     2    99 Cali… 2018… Abra… Publ… Sant… Orange NA          135      99
-    ## 10     3    99 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116      99
+    ##    index   mmr state  year   name     type  city  county district enroll overall
+    ##    <dbl> <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl>   <dbl>
+    ##  1     1    99 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137      96
+    ##  2     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  3     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  4     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  5     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  6     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  7     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  8     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ##  9     2    99 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135      99
+    ## 10     3    99 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116      99
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -1033,18 +1034,18 @@ relocate(CAMINYUT, enroll:overall, .after = index)
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index enroll   mmr overall state year  name  type  city  county district
-    ##    <dbl>  <dbl> <dbl>   <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>   
-    ##  1     1    137    99      96 Cali… 2018… Abby… Publ… Teme… River… NA      
-    ##  2     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  3     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  4     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  5     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  6     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  7     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  8     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ##  9     2    135    99      99 Cali… 2018… Abra… Publ… Sant… Orange NA      
-    ## 10     3    116    99      99 Cali… 2018… Achi… Publ… Oakl… Alame… NA      
+    ##    index enroll   mmr overall state  year   name     type  city  county district
+    ##    <dbl>  <dbl> <dbl>   <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>   
+    ##  1     1    137    99      96 Calif… 2018-… Abby Re… Publ… Teme… River… NA      
+    ##  2     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  3     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  4     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  5     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  6     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  7     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  8     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ##  9     2    135    99      99 Calif… 2018-… Abraham… Publ… Sant… Orange NA      
+    ## 10     3    116    99      99 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA      
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -1081,18 +1082,18 @@ mutate(CAMINYUT, overall = overall/100)
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99    0.96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99    0.99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99    0.99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99    0.96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99    0.99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99    0.99
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -1105,18 +1106,18 @@ mutate(CAMINYUT, type = ifelse(type == "Public", "Pub",
 ```
 
     ## # A tibble: 23,328 x 16
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Pub   Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Pub   Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Pub   Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Pub   Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Pub   Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Pub   Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 5 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>, lat <dbl>, lng <dbl>
 
@@ -1129,18 +1130,18 @@ CAMINYUT %>%
 ```
 
     ## # A tibble: 23,328 x 12
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 1 more variable: overall_rate <dbl>
 
 Notice the pipe operator `%>%` (keyboard shortcut: Ctrl+Shift+M or
@@ -1170,18 +1171,18 @@ select(mutate(CAMINYUT, overall_rate = overall/100), index:overall, overall_rate
 ```
 
     ## # A tibble: 23,328 x 12
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     3 Cali… 2018… Achi… Publ… Oakl… Alame… NA          116    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     3 Calif… 2018-… Achieve… Publ… Oakl… Alame… NA          116    99      99
     ## # … with 23,318 more rows, and 1 more variable: overall_rate <dbl>
 
 There are many other functions included in `dplyr`. The last ones that
@@ -1193,8 +1194,6 @@ CAMINYUT %>%
   group_by(state) %>% 
   summarise(mean_mmr = mean(mmr))
 ```
-
-    ## `summarise()` ungrouping output (override with `.groups` argument)
 
     ## # A tibble: 4 x 2
     ##   state      mean_mmr
@@ -1269,18 +1268,18 @@ left_join(CAMINYUT1, CAMINYUT2)
     ## Joining, by = c("index", "state", "year", "name", "type", "city", "county", "district")
 
     ## # A tibble: 138,274 x 14
-    ##    index state year  name  type  city  county district enroll   mmr overall
-    ##    <dbl> <chr> <chr> <chr> <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
-    ##  1     1 Cali… 2018… Abby… Publ… Teme… River… NA          137    99      96
-    ##  2     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  3     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  4     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  5     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  6     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  7     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  8     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ##  9     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
-    ## 10     2 Cali… 2018… Abra… Publ… Sant… Orange NA          135    99      99
+    ##    index state  year   name     type  city  county district enroll   mmr overall
+    ##    <dbl> <chr>  <chr>  <chr>    <chr> <chr> <chr>  <lgl>     <dbl> <dbl>   <dbl>
+    ##  1     1 Calif… 2018-… Abby Re… Publ… Teme… River… NA          137    99      96
+    ##  2     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  3     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  4     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  5     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  6     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  7     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  8     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ##  9     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
+    ## 10     2 Calif… 2018-… Abraham… Publ… Sant… Orange NA          135    99      99
     ## # … with 138,264 more rows, and 3 more variables: xrel <lgl>, xmed <dbl>,
     ## #   xper <dbl>
 
@@ -1300,6 +1299,9 @@ Let’s review how to export data.
 write_csv(measles, path = "measles.csv") # the specified path will create a data folder within your current working directory  
 ```
 
+    ## Warning: The `path` argument of `write_csv()` is deprecated as of readr 1.4.0.
+    ## Please use the `file` argument instead.
+
 To make sure that this was exported correctly, import the csv file, this
 time from your local disk, then compare it to the version that still
 exists in your environment
@@ -1308,7 +1310,8 @@ exists in your environment
 measles_local <- read_csv("measles.csv")
 ```
 
-    ## Parsed with column specification:
+    ## 
+    ## ── Column specification ────────────────────────────────────────────────────────
     ## cols(
     ##   index = col_double(),
     ##   state = col_character(),
